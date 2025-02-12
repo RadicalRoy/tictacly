@@ -1,5 +1,13 @@
-import { View } from "react-native";
+import { FlatList } from "react-native";
+import { useGameStore } from "../store/gameStore";
+import GameCard from "../components/GameCard";
 
 export default function HistoryScreen() {
-  return <View></View>;
+  const history = useGameStore((store) => store.history);
+  return (
+    <FlatList
+      data={history}
+      renderItem={({ item, index }) => <GameCard game={item} gameId={index} />}
+    />
+  );
 }

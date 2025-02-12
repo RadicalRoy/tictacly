@@ -8,12 +8,14 @@ import {
 } from "react-native";
 import Square from "../components/Square";
 import Row from "../components/Row";
-import { Game } from "../store/gameStore";
+import { Game, useGameStore } from "../store/gameStore";
 
 export default function App() {
   const [game, setGame] = useState<Game>(
     Array(3).fill(Array(3).fill(undefined)),
   );
+
+  const saveGame = useGameStore((store) => store.saveGame);
 
   const handleToggle = (i: number, j: number) => {
     setGame((oldGame) => {
@@ -39,7 +41,11 @@ export default function App() {
         <Row row={game[1]} rowId={1} handleToggle={handleToggle} />
         <Row row={game[2]} rowId={2} handleToggle={handleToggle} />
       </View>
-      <TouchableOpacity style={styles.saveGameButton} activeOpacity={0.8}>
+      <TouchableOpacity
+        style={styles.saveGameButton}
+        activeOpacity={0.8}
+        onPress={() => saveGame(game)}
+      >
         <Text>Save this game!</Text>
       </TouchableOpacity>
     </ScrollView>
