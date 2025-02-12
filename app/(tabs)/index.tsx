@@ -5,10 +5,9 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
 } from "react-native";
-import Row from "../components/Row";
-import { Game, TicTacToe, useGameStore } from "../store/gameStore";
+import { Game, TicTacToe, useGameStore } from "../../store/gameStore";
+import GameBoard from "../../components/GameBoard";
 
 const initialState = Array(3).fill(Array(3).fill(null));
 
@@ -17,7 +16,6 @@ export default function App() {
   const [currentPlayer, setCurrentPlayer] = useState<TicTacToe>("X");
   const [winner, setWinner] = useState<TicTacToe>(null);
 
-  console.log("winner", winner);
   useEffect(() => {
     // effects for winner
     if (winner) {
@@ -63,7 +61,7 @@ export default function App() {
         return newGame;
       });
     },
-    [checkWinner, winner, currentPlayer],
+    [winner, currentPlayer],
   );
 
   return (
@@ -72,26 +70,7 @@ export default function App() {
       contentContainerStyle={styles.container}
     >
       <Text>{`Current Player: ${currentPlayer}`}</Text>
-      <View style={styles.game}>
-        <Row
-          row={game[0]}
-          rowId={0}
-          handleToggle={handleToggle}
-          winner={winner}
-        />
-        <Row
-          row={game[1]}
-          rowId={1}
-          handleToggle={handleToggle}
-          winner={winner}
-        />
-        <Row
-          row={game[2]}
-          rowId={2}
-          handleToggle={handleToggle}
-          winner={winner}
-        />
-      </View>
+      <GameBoard winner={winner} game={game} handleToggle={handleToggle} />
       <TouchableOpacity
         style={styles.gameButton}
         activeOpacity={0.8}
@@ -129,7 +108,6 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     marginBottom: 8,
   },
-  game: { marginBottom: 12 },
 });
 
 const checkWinner = (game: Game) => {

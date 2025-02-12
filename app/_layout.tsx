@@ -1,10 +1,13 @@
-import { Tabs } from "expo-router";
+import { Stack } from "expo-router";
 
 export default function Layout() {
   return (
-    <Tabs>
-      <Tabs.Screen name="index" options={{ title: "TicTacly" }} />
-      <Tabs.Screen name="history" options={{ title: "History" }} />
-    </Tabs>
+    <Stack>
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="[gameHistoryId]"
+        options={{ presentation: "modal", title: "" }}
+      />
+    </Stack>
   );
 }

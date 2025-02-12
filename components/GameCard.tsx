@@ -1,5 +1,6 @@
-import { TouchableOpacity, Text, StyleSheet } from "react-native";
-import { Game, GameHistoryRecord } from "../store/gameStore";
+import { Text, StyleSheet, Pressable } from "react-native";
+import { GameHistoryRecord } from "../store/gameStore";
+import { Link } from "expo-router";
 
 type Props = {
   gameRecord: GameHistoryRecord;
@@ -8,10 +9,12 @@ type Props = {
 
 export default function GameCard({ gameRecord, gameId }: Props) {
   return (
-    <TouchableOpacity style={styles.card}>
-      <Text>{`Id: ${gameId}`}</Text>
-      <Text>{`Winner: ${gameRecord.winner}`}</Text>
-    </TouchableOpacity>
+    <Link href={`/${gameId}`} asChild>
+      <Pressable style={styles.card}>
+        <Text>{`Id: ${gameId}`}</Text>
+        <Text>{`Winner: ${gameRecord.winner}`}</Text>
+      </Pressable>
+    </Link>
   );
 }
 
