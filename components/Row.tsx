@@ -1,6 +1,6 @@
 import { View, StyleSheet } from "react-native";
 import Square from "./Square";
-import type { TicTacToe } from "../app/(tabs)";
+import type { TicTacToe } from "../store/gameStore";
 
 type Props = {
   row: TicTacToe[];

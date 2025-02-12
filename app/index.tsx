@@ -8,9 +8,7 @@ import {
 } from "react-native";
 import Square from "../components/Square";
 import Row from "../components/Row";
-
-export type TicTacToe = "X" | "O" | undefined;
-type Game = TicTacToe[][];
+import { Game } from "../store/gameStore";
 
 export default function App() {
   const [game, setGame] = useState<Game>(

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { TouchableOpacity, Text, StyleSheet } from "react-native";
-import type { TicTacToe } from "../app/(tabs)";
+import type { TicTacToe } from "../store/gameStore";
 
 type Props = {
   value: TicTacToe;
