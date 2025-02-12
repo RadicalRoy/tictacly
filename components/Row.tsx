@@ -6,14 +6,27 @@ type Props = {
   row: TicTacToe[];
   rowId: number;
   handleToggle: (i: number, j: number) => void;
+  winner: TicTacToe | null;
 };
 
-export default function Row({ rowId, row, handleToggle }: Props) {
+export default function Row({ rowId, row, handleToggle, winner }: Props) {
   return (
     <View style={styles.row}>
-      <Square value={row[0]} onToggle={() => handleToggle(rowId, 0)} />
-      <Square value={row[1]} onToggle={() => handleToggle(rowId, 1)} />
-      <Square value={row[2]} onToggle={() => handleToggle(rowId, 2)} />
+      <Square
+        value={row[0]}
+        onToggle={() => handleToggle(rowId, 0)}
+        winner={winner}
+      />
+      <Square
+        value={row[1]}
+        onToggle={() => handleToggle(rowId, 1)}
+        winner={winner}
+      />
+      <Square
+        value={row[2]}
+        onToggle={() => handleToggle(rowId, 2)}
+        winner={winner}
+      />
     </View>
   );
 }

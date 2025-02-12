@@ -1,52 +1,113 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
+  Alert,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import Square from "../components/Square";
 import Row from "../components/Row";
-import { Game, useGameStore } from "../store/gameStore";
+import { Game, TicTacToe, useGameStore } from "../store/gameStore";
+
+const initialState = Array(3).fill(Array(3).fill(null));
 
 export default function App() {
-  const [game, setGame] = useState<Game>(
-    Array(3).fill(Array(3).fill(undefined)),
-  );
+  const [game, setGame] = useState<Game>(initialState);
+  const [currentPlayer, setCurrentPlayer] = useState<TicTacToe>("X");
+  const [winner, setWinner] = useState<TicTacToe>(null);
+
+  console.log("winner", winner);
+  useEffect(() => {
+    // effects for winner
+    if (winner) {
+      Alert.alert("We have a winner!", `${winner} has won the game!`);
+    }
+  }, [winner]);
 
   const saveGame = useGameStore((store) => store.saveGame);
 
-  const handleToggle = (i: number, j: number) => {
-    setGame((oldGame) => {
-      const newGame = JSON.parse(JSON.stringify(oldGame)) as Game;
+  const handleSaveGame = useCallback(() => {
+    if (!winner) {
+      Alert.alert(
+        "There must be a winner before saving",
+        "Play it out to save the game record",
+      );
+    } else {
+      saveGame(game, winner);
+    }
+  }, [game, winner]);
 
-      if (oldGame[i][j] === undefined || oldGame[i][j] === "O") {
-        newGame[i][j] = "X";
-      } else {
-        newGame[i][j] = "O";
-      }
+  const handleToggle = useCallback(
+    (i: number, j: number) => {
+      setGame((oldGame) => {
+        const newGame = JSON.parse(JSON.stringify(oldGame)) as Game;
 
-      return newGame;
-    });
-  };
+        newGame[i][j] = currentPlayer;
+
+        // check winner
+        const winner = checkWinner(newGame);
+
+        if (winner) {
+          setWinner(winner);
+        } else {
+          setCurrentPlayer((current) => {
+            if (current === "X") {
+              return "O";
+            } else {
+              return "X";
+            }
+          });
+        }
+
+        return newGame;
+      });
+    },
+    [checkWinner, winner, currentPlayer],
+  );
 
   return (
     <ScrollView
       style={styles.scrollView}
       contentContainerStyle={styles.container}
     >
+      <Text>{`Current Player: ${currentPlayer}`}</Text>
       <View style={styles.game}>
-        <Row row={game[0]} rowId={0} handleToggle={handleToggle} />
-        <Row row={game[1]} rowId={1} handleToggle={handleToggle} />
-        <Row row={game[2]} rowId={2} handleToggle={handleToggle} />
+        <Row
+          row={game[0]}
+          rowId={0}
+          handleToggle={handleToggle}
+          winner={winner}
+        />
+        <Row
+          row={game[1]}
+          rowId={1}
+          handleToggle={handleToggle}
+          winner={winner}
+        />
+        <Row
+          row={game[2]}
+          rowId={2}
+          handleToggle={handleToggle}
+          winner={winner}
+        />
       </View>
       <TouchableOpacity
-        style={styles.saveGameButton}
+        style={styles.gameButton}
         activeOpacity={0.8}
-        onPress={() => saveGame(game)}
+        onPress={handleSaveGame}
       >
         <Text>Save this game!</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.gameButton}
+        activeOpacity={0.8}
+        onPress={() => {
+          setGame(initialState);
+          setWinner(null);
+        }}
+      >
+        <Text>Reset board</Text>
       </TouchableOpacity>
     </ScrollView>
   );
@@ -62,10 +123,37 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  saveGameButton: {
+  gameButton: {
     padding: 8,
     borderWidth: 2,
     borderRadius: 6,
+    marginBottom: 8,
   },
   game: { marginBottom: 12 },
 });
+
+const checkWinner = (game: Game) => {
+  // check rows
+  for (let i = 0; i < 3; i++) {
+    if (game[i][0] && game[i][0] === game[i][1] && game[i][1] === game[i][2]) {
+      return game[i][0];
+    }
+  }
+
+  // check columns
+  for (let j = 0; j < 3; j++) {
+    if (game[0][j] && game[0][j] === game[1][j] && game[1][j] === game[2][j]) {
+      return game[0][j];
+    }
+  }
+
+  // check diagonals
+  if (game[0][0] && game[0][0] === game[1][1] && game[1][1] === game[2][2]) {
+    return game[1][1];
+  }
+  if (game[0][2] && game[0][2] === game[1][1] && game[1][1] === game[2][0]) {
+    return game[1][1];
+  }
+
+  return null;
+};

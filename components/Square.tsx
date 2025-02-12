@@ -5,11 +5,16 @@ import type { TicTacToe } from "../store/gameStore";
 type Props = {
   value: TicTacToe;
   onToggle: () => void;
+  winner: TicTacToe;
 };
 
-export default function Square({ value, onToggle }: Props) {
+export default function Square({ value, onToggle, winner }: Props) {
   return (
-    <TouchableOpacity style={styles.button} onPress={onToggle}>
+    <TouchableOpacity
+      style={styles.button}
+      onPress={onToggle}
+      disabled={!!winner}
+    >
       <Text style={styles.text}>{value}</Text>
     </TouchableOpacity>
   );

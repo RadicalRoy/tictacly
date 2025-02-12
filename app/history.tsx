@@ -7,7 +7,9 @@ export default function HistoryScreen() {
   return (
     <FlatList
       data={history}
-      renderItem={({ item, index }) => <GameCard game={item} gameId={index} />}
+      renderItem={({ item, index }) => (
+        <GameCard gameRecord={item} gameId={index} />
+      )}
     />
   );
 }

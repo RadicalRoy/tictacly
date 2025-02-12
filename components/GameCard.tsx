@@ -1,15 +1,16 @@
 import { TouchableOpacity, Text, StyleSheet } from "react-native";
-import { Game } from "../store/gameStore";
+import { Game, GameHistoryRecord } from "../store/gameStore";
 
 type Props = {
-  game: Game;
+  gameRecord: GameHistoryRecord;
   gameId: number;
 };
 
-export default function GameCard({ game, gameId }: Props) {
+export default function GameCard({ gameRecord, gameId }: Props) {
   return (
     <TouchableOpacity style={styles.card}>
       <Text>{`Id: ${gameId}`}</Text>
+      <Text>{`Winner: ${gameRecord.winner}`}</Text>
     </TouchableOpacity>
   );
 }
